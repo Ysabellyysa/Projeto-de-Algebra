@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Trabalho Álgebra Linear</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+<style>
+ body {
+font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; 
+color: white; 
+display: flex;
+justify-content: center; 
+align-items: center; 
+min-height: 100vh; 
+margin: 0; 
+}
+
+/* 2. O Bloco Cinza e Profissional */
+.container {
+max-width: 600px;
+width: 100%; 
+background-color: #222222;
+border: 1px solid #444444; 
+padding: 30px; 
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05); 
+text-align: left; 
+}
+
+/* 3. Inputs e Botões com Estilo Compatível */
+input {
+width: 60px;
+margin: 5px;
+padding: 8px;
+background-color: #333333; 
+border: 1px solid #555555;
+border-radius: 4px; 
+color: white;
+}
+
+button {
+padding: 12px 20px;
+cursor: pointer;
+background: #007bff; 
+color: white;
+border: none;
+border-radius: 6px;
+font-weight: bold;
+transition: background 0.3s ease; 
+}
+button:hover {
+background-color: #0056b3;
+}
+
+/* 4. Saída formatada para Modo Escuro */
+.result {
+margin-top: 25px;
+background: #1a1a1a; 
+padding: 15px;
+border-left: 5px solid #007bff;
+border-radius: 4px;
+color: #cccccc; 
+ }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Questão 4: Transformações Lineares </h2>
+    <p>Insira os valores do vetor v = (a, b, c):</p>
+    
+    a: <input type="number" id="valA" value="1">
+    b: <input type="number" id="valB" value="2">
+    c: <input type="number" id="valC" value="3">
+    
+    <br><br>
+    <button py-click="calcular">Calcular Resultados</button>
+
+    <div id="output" class="result">
+        Clique no botão para ver os cálculos.
+    </div>
+</div>
+
+<py-config>
+    packages = ["numpy"]
+</py-config>
+
+<script type="py">
+from pyscript import window, document
+import numpy as np
+
+def calcular(event):
+    # 1. Captura dos valores
+    try:
+        a = float(document.querySelector("#valA").value)
+        b = float(document.querySelector("#valB").value)
+        c = float(document.querySelector("#valC").value)
+    except:
+        document.getElementById("output").innerHTML = "Insira números válidos!"
+        return
+    
+    v = np.array([a, b, c])
+
+    # 2. Matrizes Corretas do Item B 
+    # T1(x,y,z) = (x+y+z, x+y, x)
+    A1 = np.array([
+        [1, 1, 1],
+        [1, 1, 0],
+        [1, 0, 0]
+    ])
+    
+    # T2(x,y,z) = (2x-y, 3y+z, x-4z)
+    A2 = np.array([
+        [2, -1,  0],
+        [0,  3,  1],
+        [1,  0, -4]
+    ])
+
+    # 3. Cálculos da Questão 4 [cite: 29]
+    t1_v = A1 @ v
+    t2_v = A2 @ v
+    soma_v = t1_v + t2_v
+    comp_v = A2 @ t1_v # (T2 ∘ T1)(v)
+
+    # 4. Saída Limpa (Injetando HTML no elemento)
+    saida = f"""
+        <b>T1(v):</b> {list(t1_v)}<br>
+        <b>T2(v):</b> {list(t2_v)}<br>
+        <b>(T1 + T2)(v):</b> {list(soma_v)}<br>
+        <b>(T2 ∘ T1)(v):</b> {list(comp_v)}
+    """
+    
+    document.getElementById("output").innerHTML = saida
+</script>
+
+</body>
+</html>
